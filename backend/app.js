@@ -10,12 +10,23 @@ import userRouter from "./router/userRouter.js";
 import appointmentRouter from "./router/appointmentRouter.js";
 
 const app = express();
-config({ path: "./config/config.env" });
 
+// ✅ Load environment variables
+config({ path: "./.env" });
+
+// ✅ Safely log active environment
+console.log("🟢 Starting server...");
+console.log("🌍 FRONTEND_URL_ONE:", process.env.FRONTEND_URL_ONE);
+console.log("🌍 FRONTEND_URL_TWO:", process.env.FRONTEND_URL_TWO);
+
+// ✅ CORS setup
 app.use(
   cors({
-    origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
-    method: ["GET", "POST", "DELETE", "PUT"],
+    origin: [
+      process.env.FRONTEND_URL_ONE || "http://localhost:5173",
+      process.env.FRONTEND_URL_TWO || "http://localhost:5174",
+    ],
+    methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,
   })
 );
@@ -24,17 +35,23 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ✅ File upload
 app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: "/tmp/",
   })
 );
+
+// ✅ API routes
 app.use("/api/v1/message", messageRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/appointment", appointmentRouter);
 
+// ✅ Database connection
 dbConnection();
 
+// ✅ Error handler (must be last middleware)
 app.use(errorMiddleware);
+
 export default app;
