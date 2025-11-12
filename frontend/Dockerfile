@@ -1,33 +1,17 @@
-# ===========================
-# Stage 1 — Build React App
-# ===========================
-FROM node:18-alpine AS build
+# Use Node 18 image
+FROM node:18
 
 WORKDIR /app
 
-# Copy only package files first for caching
+# Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install
 
-# Copy the rest of the app
+# Copy frontend source code
 COPY . .
 
-# Run build
-RUN npm run build
+# Expose Vite dev server port
+EXPOSE 5173
 
-# Check if build directory exists (debug line)
-RUN ls -la /app/build
-
-# ===========================
-# Stage 2 — Serve with Nginx
-# ===========================
-FROM nginx:1.23-alpine
-
-# Clean the default nginx html content
-RUN rm -rf /usr/share/nginx/html/*
-
-# Copy built React app from previous stage
-COPY --from=build /app/build /usr/share/nginx/html
-
-EXPOSE 80
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+# Start frontend dev server
+CMD ["npm", "run", "dev", "--", "--host"]
