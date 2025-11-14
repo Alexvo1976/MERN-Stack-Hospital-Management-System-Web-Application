@@ -12,19 +12,19 @@ import appointmentRouter from "./router/appointmentRouter.js";
 const app = express();
 
 // ✅ Load environment variables
-config({ path: "./.env" });
+config({ path: ".env" });
 
 // ✅ Safely log active environment
 console.log("🟢 Starting server...");
-console.log("🌍 FRONTEND_URL_ONE:", process.env.FRONTEND_URL_ONE);
-console.log("🌍 FRONTEND_URL_TWO:", process.env.FRONTEND_URL_TWO);
+console.log("🌍 FRONTEND_URL:", process.env.FRONTEND_URL);
+console.log("🌍 DASHBOARD_URL:", process.env.DASHBOARD_URL);
 
 // ✅ CORS setup
 app.use(
   cors({
     origin: [
-      process.env.FRONTEND_URL_ONE || "http://localhost:5173",
-      process.env.FRONTEND_URL_TWO || "http://localhost:5174",
+      process.env.FRONTEND_URL || "http://localhost:5173",
+      process.env.DASHBOARD_URL || "http://localhost:5174",
     ],
     methods: ["GET", "POST", "DELETE", "PUT"],
     credentials: true,

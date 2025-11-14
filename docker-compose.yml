@@ -1,33 +1,41 @@
-services:
-  mongo:
-    image: mongo:6
-    container_name: mongo
-    restart: unless-stopped
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
+version: "3.9"
 
+services:
   backend:
     build: ./backend
     container_name: backend
-    restart: unless-stopped
-    env_file: .env
+    restart: always
     ports:
       - "4000:4000"
-    depends_on:
-      - mongo
+    env_file:
+      - .env         # ⬅️ Reads root-level .env
+    environment:
+      - PORT=4000
+    networks:
+      - mern
 
   frontend:
     build: ./frontend
     container_name: frontend
-    restart: unless-stopped
-    env_file:
-      - frontend/.env # optional if you have frontend env vars
+    restart: always
     ports:
-      - "5173:5173"
-    depends_on:
-      - backend
+      - "5173:80"
+    env_file:
+      - .env
+    networks:
+      - mern
 
-volumes:
-  mongo-data:
+  dashboard:
+    build: ./dashboard
+    container_name: dashboard
+    restart: always
+    ports:
+      - "5174:80"
+    env_file:
+      - .env
+    networks:
+      - mern
+
+networks:
+  mern:
+    driver: bridge
