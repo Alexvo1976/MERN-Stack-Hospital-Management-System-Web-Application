@@ -25,8 +25,9 @@ app.use(
     origin: [
       process.env.FRONTEND_URL || "http://localhost:5173",
       process.env.DASHBOARD_URL || "http://localhost:5174",
+      "http://localhost:5175",
     ],
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    methods: ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
     credentials: true,
   })
 );
