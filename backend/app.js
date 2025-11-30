@@ -12,7 +12,7 @@ import appointmentRouter from "./router/appointmentRouter.js";
 const app = express();
 
 // ✅ Load environment variables
-config({ path: ".env" });
+config({ path: "./config/config.env" });
 
 // ✅ Safely log active environment
 console.log("🟢 Starting server...");
