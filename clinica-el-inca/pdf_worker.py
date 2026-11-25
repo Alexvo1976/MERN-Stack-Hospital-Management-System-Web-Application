@@ -27,15 +27,18 @@ elif mode=='render':
  data=json.load(sys.stdin)
  for f in data['fields']:
   p=doc[f['page']]; value=str(data['values'].get(f['id'],''))
-  if not value: continue
   if f.get('widget'):
    for w in p.widgets() or []:
-    if w.field_name==f['widget']: w.field_value=value; w.update()
+    if w.field_name==f['widget']:
+     w.field_value=value; w.update()
   else:
+   if not value: continue
    rect=fitz.Rect(f['rect'])
    size=10
    while size>=5:
     if p.insert_textbox(rect,value,fontsize=size,fontname='helv')>=0: break
     size-=1
    else: raise ValueError('Texto no cabe: '+f['label'])
- doc.save(sys.argv[3])
+ # Keep original page geometry and content; bake widget appearances for consistent printing.
+ doc.bake(annots=False,widgets=True)
+ doc.save(sys.argv[3],garbage=3,deflate=True)
