@@ -18,3 +18,5 @@ OCR local es heurístico, detecta etiquetas con dos puntos; no garantiza detecta
 Nombre y dirección consultados en https://www.findhealthclinics.org/EC/Quito/1083954615042258/Club-de-Leones-El-Inca . Facebook no accesible directamente. Colocar el logo autorizado en public/logo.png. Departamentos iniciales son ejemplos configurables.
 ## Producción (pendiente)
 Autenticación, autorización por departamento, auditoría, cifrado, validación de archivos, copias verificadas, política de conservación y revisión LOPDP. No usar configuraciones ni credenciales del proyecto anterior. AWS Lightsail y S3 son opciones para piloto, dimensionar MongoDB y OCR; no desplegado.
+## Actualización: un formulario por departamento
+Al arrancar se selecciona el formulario publicado más reciente por departamento si todavía no hay uno activo. Publicar una nueva plantilla cambia el formulario activo; los documentos anteriores se conservan. Las claves compartidas se sugieren en el editor. La selección de paciente abre automáticamente el formulario activo. Reiniciar API y frontend después de actualizar. No borrar data/ ni el volumen MongoDB.

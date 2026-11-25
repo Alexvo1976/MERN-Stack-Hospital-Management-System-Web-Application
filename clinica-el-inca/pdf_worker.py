@@ -1,4 +1,4 @@
-import sys,json,fitz
+import sys,json,pymupdf as fitz
 mode,path=sys.argv[1:3]
 doc=fitz.open(path)
 if mode=='inspect':
