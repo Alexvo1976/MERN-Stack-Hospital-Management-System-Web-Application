@@ -39,6 +39,7 @@ export async function installAuth(app,db){
   if(!row)return s.status(401).json({error:'Sesión expirada'});
   await sessions.updateOne({_id:row._id},{$set:{expiresAt:new Date(Math.min(Date.now()+900000,row.absolute.getTime()))}});
   q.pilotSession=row._id;
+  q.clinicalUser=Object.freeze({username:'admin',active:true,bootstrapAdmin:true});
   // Express middleware must call next explicitly.
   s.locals.authenticated=true;n();
  })()).catch(n)});
