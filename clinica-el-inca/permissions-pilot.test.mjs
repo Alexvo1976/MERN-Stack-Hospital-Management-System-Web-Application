@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {allowed} from './permissions-pilot.mjs';
+const doctor={username:'medico01',active:true,role:'especialista',department:'Medicina general'};
+const reception={username:'recepcion01',active:true,role:'admisiones',department:'Admisiones'};
+test('anonymous and disabled accounts denied',()=>{assert.equal(allowed(null,'patient.read'),false);assert.equal(allowed({...doctor,active:false},'patient.read',{department:doctor.department}),false)});
+test('doctor restricted to assigned department',()=>{assert.equal(allowed(doctor,'patient.read',{department:doctor.department}),true);assert.equal(allowed(doctor,'patient.read',{department:'Cardiología'}),false)});
+test('record requires matching patient and template department',()=>{for(const action of ['record.read','record.create','record.preview']){assert.equal(allowed(doctor,action,{department:doctor.department,patientDepartment:doctor.department}),true);assert.equal(allowed(doctor,action,{department:doctor.department,patientDepartment:'Caja'}),false);assert.equal(allowed(doctor,action,{department:'Caja',patientDepartment:doctor.department}),false)}});
+test('employees cannot administer accounts or unpublished templates',()=>{assert.equal(allowed(doctor,'employee.create'),false);assert.equal(allowed(doctor,'template.read',{department:doctor.department,published:false}),false);assert.equal(allowed({...doctor,role:'administracion'},'employee.create'),false)});
+test('admissions can register and refer only admissions patients',()=>{assert.equal(allowed(reception,'patient.create'),true);assert.equal(allowed(reception,'patient.refer',{department:'Admisiones'}),true);assert.equal(allowed(reception,'patient.refer',{department:'Caja'}),false);assert.equal(allowed(doctor,'patient.create'),false)});
+test('unknown actions denied; bootstrap admin explicitly allowed',()=>{assert.equal(allowed(doctor,'unknown'),false);assert.equal(allowed({username:'admin',active:true,bootstrapAdmin:true},'employee.create'),true)});
