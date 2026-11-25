@@ -1,7 +1,12 @@
 import sys,json,pymupdf as fitz
+import hashlib
+from pathlib import Path
 mode,path=sys.argv[1:3]
 doc=fitz.open(path)
-if mode=='inspect':
+if mode=='inspect' and hashlib.sha256(Path(path).read_bytes()).hexdigest()=='1a302d79a13a636f3951749cace5d5c22b0ede67618dab6548961856f5a42441':
+ profile=json.loads(Path(__file__).with_name('premier-spanish-fields.json').read_text())
+ print(json.dumps({'fields':profile,'pages':[{'width':612,'height':792}],'warnings':['Mapa específico del PDF Premier Dermatology. Revise campos adicionales y casillas manualmente. No contiene cédula; úselo como formulario de especialidad.']},ensure_ascii=False))
+elif mode=='inspect':
  fields=[]; pages=[]; warnings=[]
  for i,p in enumerate(doc):
   if i>=20: raise ValueError('Máximo 20 páginas')

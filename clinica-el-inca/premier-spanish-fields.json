@@ -1,0 +1,288 @@
+[
+  {
+    "label": "NOMBRE DEL PACIENTE",
+    "key": "name",
+    "rect": [
+      147,
+      98,
+      264,
+      110
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": false
+  },
+  {
+    "label": "FECHA DE NACIMIENTO",
+    "key": "birth_date",
+    "rect": [
+      389,
+      98,
+      463,
+      110
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": false
+  },
+  {
+    "label": "FECHA DE HOY",
+    "key": "",
+    "rect": [
+      545,
+      98,
+      597,
+      110
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "DIRECCION",
+    "key": "address",
+    "rect": [
+      84,
+      117,
+      270,
+      129
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": false
+  },
+  {
+    "label": "CIUDAD/ESTADO",
+    "key": "city",
+    "rect": [
+      361,
+      117,
+      514,
+      129
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": false
+  },
+  {
+    "label": "ZIP",
+    "key": "zip",
+    "rect": [
+      538,
+      117,
+      597,
+      129
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": false
+  },
+  {
+    "label": "DIRECCION EMAIL",
+    "key": "email",
+    "rect": [
+      382,
+      136,
+      597,
+      148
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": false
+  },
+  {
+    "label": "NOMBRE DEL PADRE/GUARDIAN",
+    "key": "",
+    "rect": [
+      296,
+      155,
+      597,
+      167
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "TELEFONO CASA",
+    "key": "",
+    "rect": [
+      152,
+      173,
+      255,
+      185
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "CELULAR",
+    "key": "phone",
+    "rect": [
+      345,
+      173,
+      449,
+      185
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": false
+  },
+  {
+    "label": "TELEFONO TRABAJO",
+    "key": "",
+    "rect": [
+      536,
+      173,
+      597,
+      185
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "FARMACIA PREFERIDA",
+    "key": "",
+    "rect": [
+      141,
+      256,
+      345,
+      268
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "TELEFONO FARMACIA",
+    "key": "",
+    "rect": [
+      498,
+      256,
+      597,
+      268
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "EMPLEADOR",
+    "key": "",
+    "rect": [
+      92,
+      274,
+      266,
+      286
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "DIRECCION EMPLEADOR",
+    "key": "",
+    "rect": [
+      331,
+      274,
+      597,
+      286
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "NOMBRE DE ESPOSO(A)/PAREJA",
+    "key": "",
+    "rect": [
+      190,
+      293,
+      337,
+      305
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "FECHA NACIMIENTO ESPOSO(A)/PAREJA",
+    "key": "",
+    "rect": [
+      546,
+      293,
+      597,
+      305
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "CONTACTO DE EMERGENCIA",
+    "key": "",
+    "rect": [
+      277,
+      310,
+      366,
+      322
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "TELEFONO DE EMERGENCIA",
+    "key": "",
+    "rect": [
+      463,
+      310,
+      514,
+      322
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "RELACION CONTACTO",
+    "key": "",
+    "rect": [
+      575,
+      310,
+      597,
+      322
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  },
+  {
+    "label": "NOMBRE DEL PACIENTE (ESCRITO)",
+    "key": "name",
+    "rect": [
+      200,
+      694,
+      430,
+      705
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": false
+  },
+  {
+    "label": "NOMBRE PADRE/GUARDIAN (ESCRITO)",
+    "key": "",
+    "rect": [
+      218,
+      720,
+      430,
+      731
+    ],
+    "page": 0,
+    "type": "text",
+    "noShare": true
+  }
+]
