@@ -9,6 +9,9 @@ export async function installAuth(app,db){
  const salt=Buffer.from(config.salt,'hex'), hash=Buffer.from(config.hash,'hex');
  if(salt.length!==32||hash.length!==64||config.username!=='admin')throw Error('Configuración de acceso inválida');
  const sessions=db.collection('pilot_sessions');
+ const users=db.collection('pilot_employees');
+ const employeeLogin=process.env.LEONES_EMPLOYEE_LOGIN==='1'&&process.env.MONGO_URL==='mongodb://127.0.0.1:27019/leones_auth_test';
+ const identity=u=>({username:u.username,name:u.name,role:u.role,department:u.department,active:true,bootstrapAdmin:false});
  await sessions.createIndex({expiresAt:1},{expireAfterSeconds:0});
  await sessions.deleteMany({});
  const digest=t=>createHash('sha256').update(t).digest('hex');
@@ -26,11 +29,17 @@ export async function installAuth(app,db){
   const {username,password}=q.body||{};
   if(typeof password!=='string'||password.length>256||typeof username!=='string')return s.status(400).json({error:'Datos inválidos'});
   attempts.push(now);busy=true;
-  try{const actual=await derive(password,salt);if(!timingSafeEqual(actual,hash)||username!==config.username)return s.status(401).json({error:'Credenciales inválidas'});}finally{busy=false}
+  let employee=null;
+  try{
+   if(employeeLogin&&username!=='admin')employee=await users.findOne({username,active:true,credentialReady:true});
+   const valid=employee&&/^[a-f0-9]{64}$/.test(employee.passwordSalt||'')&&/^[a-f0-9]{128}$/.test(employee.passwordHash||'')&&Number.isSafeInteger(employee.credentialVersion);
+   const actual=await derive(password,valid?Buffer.from(employee.passwordSalt,'hex'):salt);
+   if(!timingSafeEqual(actual,valid?Buffer.from(employee.passwordHash,'hex'):hash)||(!valid&&username!==config.username))return s.status(401).json({error:'Credenciales inválidas'});
+  }finally{busy=false}
   attempts=[];const old=getToken(q);if(old)await sessions.deleteOne({_id:digest(old)});
   const token=randomBytes(32).toString('hex');
-  await sessions.insertOne({_id:digest(token),expiresAt:new Date(now+900000),absolute:new Date(now+28800000)});
-  s.cookie(cookie,token,flags).json({username:'admin'});
+  await sessions.insertOne({_id:digest(token),username,credentialVersion:employee?.credentialVersion??0,expiresAt:new Date(now+900000),absolute:new Date(now+28800000)});
+  s.cookie(cookie,token,flags).json(employee?identity(employee):{username:'admin',bootstrapAdmin:true});
  }));
  app.use('/api',(q,s,n)=>{Promise.resolve((async()=>{
   const token=getToken(q);const now=new Date();
@@ -39,10 +48,15 @@ export async function installAuth(app,db){
   if(!row)return s.status(401).json({error:'Sesión expirada'});
   await sessions.updateOne({_id:row._id},{$set:{expiresAt:new Date(Math.min(Date.now()+900000,row.absolute.getTime()))}});
   q.pilotSession=row._id;
-  q.clinicalUser=Object.freeze({username:'admin',active:true,bootstrapAdmin:true});
+  if(row.username==='admin')q.clinicalUser=Object.freeze({username:'admin',active:true,bootstrapAdmin:true});
+  else {
+   const employee=employeeLogin&&await users.findOne({username:row.username,active:true,credentialReady:true,credentialVersion:row.credentialVersion});
+   if(!employee){await sessions.deleteOne({_id:row._id});return s.status(401).json({error:'Sesión expirada'});}
+   q.clinicalUser=Object.freeze(identity(employee));
+  }
   // Express middleware must call next explicitly.
   s.locals.authenticated=true;n();
  })()).catch(n)});
- app.get('/api/auth/me',(q,s)=>s.json({username:'admin'}));
+ app.get('/api/auth/me',(q,s)=>s.json(q.clinicalUser));
  app.post('/api/auth/logout',wrap(async(q,s)=>{await sessions.deleteOne({_id:q.pilotSession});s.clearCookie(cookie,flags).json({ok:true})}));
 }
