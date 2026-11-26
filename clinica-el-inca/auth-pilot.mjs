@@ -39,6 +39,7 @@ export async function installAuth(app,db){
   attempts=[];const old=getToken(q);if(old)await sessions.deleteOne({_id:digest(old)});
   const token=randomBytes(32).toString('hex');
   await sessions.insertOne({_id:digest(token),username,credentialVersion:employee?.credentialVersion??0,expiresAt:new Date(now+900000),absolute:new Date(now+28800000)});
+  q.auditLoginActor=username;
   s.cookie(cookie,token,flags).json(employee?identity(employee):{username:'admin',bootstrapAdmin:true});
  }));
  app.use('/api',(q,s,n)=>{Promise.resolve((async()=>{
