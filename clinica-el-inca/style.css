@@ -2,3 +2,46 @@
 header{height:112px}header img.clinic-logo{width:92px;height:92px;object-fit:contain;border-radius:8px}aside{min-height:calc(100vh - 112px)}
 
 header img.clinic-logo{background:transparent;border-radius:0;object-fit:contain}
+
+/* Responsive navigation: desktop retains its existing sidebar. */
+.mobile-toggle,.mobile-backdrop,.mobile-nav-title,.mobile-account,.mobile-bottom,.nav-icon{display:none}
+@media(max-width:767px){
+ body{background:#f1f5f8}
+ header.clinic-header{height:auto;min-height:76px;position:sticky;top:0;z-index:30;background:#193751;padding:10px 12px;gap:10px;color:white;box-shadow:0 3px 12px #1232}
+ header.clinic-header img.clinic-logo{width:44px;height:44px;flex:none}
+ header.clinic-header>div{min-width:0}
+ header.clinic-header strong{font:600 19px Georgia;color:white;display:block;line-height:1.15}
+ header.clinic-header small{color:#e6cd91;font-size:10px;line-height:1.25;margin-top:3px}
+ header.clinic-header>span{display:none}
+ .mobile-toggle{display:grid;place-items:center;flex:none;width:42px;height:42px;margin:0;border:1px solid #ffffff40;border-radius:12px;background:#284b65;font-size:23px;padding:0}
+ aside.clinic-nav{display:none;position:fixed;inset:0 auto 0 0;width:min(360px,92vw);height:100dvh;min-height:0;overflow-y:auto;overscroll-behavior:contain;z-index:60;padding:20px 16px max(20px,env(safe-area-inset-bottom));background:#193751;box-shadow:10px 0 40px #10263755}
+ aside.clinic-nav.is-open{display:block;animation:leones-drawer-in .22s ease-out}
+ .mobile-backdrop{display:block;position:fixed;inset:0;width:100%;height:100%;max-width:none;z-index:50;background:#10263799;border:0;margin:0;border-radius:0}
+ .mobile-nav-title{display:flex;align-items:center;justify-content:space-between;color:white;font-size:19px}
+ .mobile-nav-title button{display:grid;place-items:center;width:42px;height:42px;margin:0;padding:0;border-radius:12px;background:#284b65;font-size:20px}
+ aside.clinic-nav h5{margin:24px 0 10px;font-size:10px;letter-spacing:1.8px}
+ .nav-departments{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ .nav-config{display:grid;gap:6px}
+ aside.clinic-nav .nav-departments button,aside.clinic-nav .nav-config button{display:flex;align-items:center;gap:8px;width:100%;min-width:0;min-height:48px;margin:0;padding:9px;border-radius:10px;background:#254760;font-size:12px;overflow-wrap:anywhere;line-height:1.25}
+ aside.clinic-nav .nav-departments button.active,aside.clinic-nav .nav-config button.active{background:#d6bd7b;color:#193751;font-weight:700}
+ .nav-icon{display:inline-grid;place-items:center;flex:none;width:21px;color:#e6cd91;font-size:19px}
+ aside.clinic-nav button.active .nav-icon{color:#193751}
+ .mobile-account{display:block;border-top:1px solid #ffffff30;margin-top:22px;padding-top:15px}
+ .mobile-account small{color:#e6cd91;display:block;margin-bottom:8px}
+ aside.clinic-nav .mobile-account button{display:block;width:100%;min-height:44px;margin:0;background:#284b65;border-radius:10px}
+ .desktop-logout{display:none!important}
+ .mobile-bottom{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:40;background:white;border-top:1px solid #dce3eb;box-shadow:0 -4px 22px #1231;justify-content:space-around;padding:7px 5px max(7px,env(safe-area-inset-bottom))}
+ .mobile-bottom button{display:flex;flex:1;min-width:0;align-items:center;justify-content:center;flex-direction:column;gap:3px;margin:0;padding:5px 2px;min-height:50px;border:0;background:transparent;color:#52677a;font-size:11px;border-radius:10px}
+ .mobile-bottom button span{font-size:22px;line-height:1}
+ .mobile-bottom button.active{color:#193751;background:#f4edda;font-weight:700}
+ main{margin:0;padding:16px 12px calc(88px + env(safe-area-inset-bottom));min-width:0;max-width:100%}
+ main h1{font-size:30px;margin-bottom:16px;overflow-wrap:anywhere}
+ main section{padding:15px;border-radius:12px;border-color:#dce3eb;min-width:0;box-shadow:0 3px 12px #1231}
+ main section h2{font-size:21px}
+ main input,main select{min-width:0;max-width:100%}
+ main .clinical label{width:100%;min-width:0}
+ main iframe{height:60vh}
+ main .record{overflow-wrap:anywhere}
+}
+@keyframes leones-drawer-in{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){aside.clinic-nav.is-open{animation:none}}
