@@ -32,56 +32,10 @@ export async function installEmployeeDirectory(app,db){
   await db.collection('pilot_sessions').deleteMany({username:q.params.username});
   s.json({ok:true});
  }));
- // Activation is limited to the synthetic-data pilot and requires prepared credentials.
+ // Activation is limited to the synthetic-data pilot.
  app.put('/api/employees/:username/enable',admin,wrap(async(q,s)=>{
   if(process.env.LEONES_EMPLOYEE_LOGIN!=='1'||process.env.MONGO_URL!=='mongodb://127.0.0.1:27019/leones_auth_test')return s.status(403).json({error:'Activación no disponible'});
-  const result=await users.updateOne({username:q.params.username,credentialReady:true,passwordSalt:{$regex:'^[a-f0-9]{64} Never enables employee sign-in.
- let deriving=false;
- app.put('/api/employees/:username/password',admin,wrap(async(q,s)=>{
-  const password=q.body?.password;
-  if(typeof password!=='string'||password.length<16||password.length>256||/[\r\n]/.test(password))invalid('Use una contraseña de 16 a 256 caracteres');
-  if(!await users.findOne({username:q.params.username},{projection:{_id:1}}))return s.status(404).json({error:'Usuario inexistente'});
-  if(deriving)return s.status(429).json({error:'Intente nuevamente'});
-  deriving=true;
-  try{
-   const salt=randomBytes(32),hash=await derive(password,salt);
-   const result=await users.updateOne({username:q.params.username},{$set:{passwordSalt:salt.toString('hex'),passwordHash:hash.toString('hex'),credentialReady:true,active:false,updatedAt:new Date()},$inc:{credentialVersion:1}});
-   if(!result.matchedCount)return s.status(404).json({error:'Usuario inexistente'});
-   await db.collection('pilot_sessions').deleteMany({username:q.params.username});
-   s.json({ok:true,active:false,credentialReady:true});
-  }finally{deriving=false}
- }));
- app.put('/api/employees/:username/disable',admin,wrap(async(q,s)=>{
-  const result=await users.updateOne({username:q.params.username},{$set:{active:false,updatedAt:new Date()},$inc:{credentialVersion:1}});
-  if(!result.matchedCount)return s.status(404).json({error:'Usuario inexistente'});
-  await db.collection('pilot_sessions').deleteMany({username:q.params.username});
-  s.json({ok:true,active:false});
- }));
-}
-},passwordHash:{$regex:'^[a-f0-9]{128} Never enables employee sign-in.
- let deriving=false;
- app.put('/api/employees/:username/password',admin,wrap(async(q,s)=>{
-  const password=q.body?.password;
-  if(typeof password!=='string'||password.length<16||password.length>256||/[\r\n]/.test(password))invalid('Use una contraseña de 16 a 256 caracteres');
-  if(!await users.findOne({username:q.params.username},{projection:{_id:1}}))return s.status(404).json({error:'Usuario inexistente'});
-  if(deriving)return s.status(429).json({error:'Intente nuevamente'});
-  deriving=true;
-  try{
-   const salt=randomBytes(32),hash=await derive(password,salt);
-   const result=await users.updateOne({username:q.params.username},{$set:{passwordSalt:salt.toString('hex'),passwordHash:hash.toString('hex'),credentialReady:true,active:false,updatedAt:new Date()},$inc:{credentialVersion:1}});
-   if(!result.matchedCount)return s.status(404).json({error:'Usuario inexistente'});
-   await db.collection('pilot_sessions').deleteMany({username:q.params.username});
-   s.json({ok:true,active:false,credentialReady:true});
-  }finally{deriving=false}
- }));
- app.put('/api/employees/:username/disable',admin,wrap(async(q,s)=>{
-  const result=await users.updateOne({username:q.params.username},{$set:{active:false,updatedAt:new Date()},$inc:{credentialVersion:1}});
-  if(!result.matchedCount)return s.status(404).json({error:'Usuario inexistente'});
-  await db.collection('pilot_sessions').deleteMany({username:q.params.username});
-  s.json({ok:true,active:false});
- }));
-}
-},credentialVersion:{$gte:1}},{$set:{active:true,updatedAt:new Date()},$inc:{credentialVersion:1}});
+  const result=await users.updateOne({username:q.params.username,credentialReady:true,passwordSalt:{$regex:'^[a-f0-9]{64}$'},passwordHash:{$regex:'^[a-f0-9]{128}$'},credentialVersion:{$gte:1}},{$set:{active:true,updatedAt:new Date()},$inc:{credentialVersion:1}});
   if(!result.matchedCount)return s.status(409).json({error:'Configure primero la contraseña'});
   await db.collection('pilot_sessions').deleteMany({username:q.params.username});
   s.json({ok:true,active:true});
