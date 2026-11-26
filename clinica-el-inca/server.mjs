@@ -1,3 +1,4 @@
+import {installAuditCapture,installAuditReader} from './audit-pilot.mjs';
 import {requirePermission,requireAdmin,scopedState} from './clinical-access-pilot.mjs';
 import {installEmployeeDirectory} from './employees-pilot.mjs';
 import {installAuth} from './auth-pilot.mjs';
@@ -26,7 +27,9 @@ console.log('PDF respaldados en MongoDB:',available,'; faltantes:',missing);
 const wrap=f=>(q,s,n)=>Promise.resolve(f(q,s)).catch(n);
 const assert=(ok,msg)=>{if(!ok)throw Object.assign(new Error(msg),{status:400})};
 const worker=(args,input)=>new Promise((resolve,reject)=>{let p=spawn(process.env.PYTHON||'.venv/bin/python',['pdf_worker.py',...args]);let out='',err='';p.stdout.on('data',x=>out+=x);p.stderr.on('data',x=>err+=x);p.on('error',reject);let timer=setTimeout(()=>p.kill(),90000);p.on('close',c=>{clearTimeout(timer);c===0?resolve(out):reject(new Error(err||'Error PDF'))});p.stdin.end(input?JSON.stringify(input):'')});
+await installAuditCapture(app,mongoose.connection.db);
 await installAuth(app,mongoose.connection.db);
+installAuditReader(app,mongoose.connection.db);
 await installEmployeeDirectory(app,mongoose.connection.db);
 const upload=multer({storage:multer.memoryStorage(),limits:{fileSize:10*1024*1024}});
 app.get('/api/state',wrap(async(q,s)=>s.json(await scopedState(q.clinicalUser,{Patient,Template,Record,Department,mapped}))));
